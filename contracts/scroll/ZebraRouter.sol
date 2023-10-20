@@ -28,8 +28,7 @@ contract ZebraRouter is IZebraRouter, Ownable {
     }
 
     receive() external payable {
-        assert(msg.sender == WETH);
-        // only accept ETH via fallback from the WETH contract
+        assert(msg.sender == WETH); // only accept ETH via fallback from the WETH contract
     }
 
     function pairFor(address tokenA, address tokenB) public view returns (address pair){
@@ -123,8 +122,7 @@ contract ZebraRouter is IZebraRouter, Ownable {
         uint deadline
     ) public virtual override ensure(deadline) returns (uint amountA, uint amountB) {
         address pair = pairFor(tokenA, tokenB);
-        IZebraPair(pair).transferFrom(msg.sender, pair, liquidity);
-        // send liquidity to pair
+        IZebraPair(pair).transferFrom(msg.sender, pair, liquidity); // send liquidity to pair
         (uint amount0, uint amount1) = IZebraPair(pair).burn(to);
         (address token0,) = IZebraFactory(factory).sortTokens(tokenA, tokenB);
         (amountA, amountB) = tokenA == token0 ? (amount0, amount1) : (amount1, amount0);
@@ -165,7 +163,7 @@ contract ZebraRouter is IZebraRouter, Ownable {
         bool approveMax, uint8 v, bytes32 r, bytes32 s
     ) external virtual override returns (uint amountA, uint amountB) {
         address pair = pairFor(tokenA, tokenB);
-        uint value = approveMax ? uint(- 1) : liquidity;
+        uint value = approveMax ? uint(-1) : liquidity;
         IZebraPair(pair).permit(msg.sender, address(this), value, deadline, v, r, s);
         (amountA, amountB) = removeLiquidity(tokenA, tokenB, liquidity, amountAMin, amountBMin, to, deadline);
     }
@@ -180,7 +178,7 @@ contract ZebraRouter is IZebraRouter, Ownable {
         bool approveMax, uint8 v, bytes32 r, bytes32 s
     ) external virtual override returns (uint amountToken, uint amountETH) {
         address pair = pairFor(token, WETH);
-        uint value = approveMax ? uint(- 1) : liquidity;
+        uint value = approveMax ? uint(-1) : liquidity;
         IZebraPair(pair).permit(msg.sender, address(this), value, deadline, v, r, s);
         (amountToken, amountETH) = removeLiquidityETH(token, liquidity, amountTokenMin, amountETHMin, to, deadline);
     }
@@ -218,7 +216,7 @@ contract ZebraRouter is IZebraRouter, Ownable {
         bool approveMax, uint8 v, bytes32 r, bytes32 s
     ) external virtual override returns (uint amountETH) {
         address pair = pairFor(token, WETH);
-        uint value = approveMax ? uint(- 1) : liquidity;
+        uint value = approveMax ? uint(-1) : liquidity;
         IZebraPair(pair).permit(msg.sender, address(this), value, deadline, v, r, s);
         amountETH = removeLiquidityETHSupportingFeeOnTransferTokens(
             token, liquidity, amountTokenMin, amountETHMin, to, deadline

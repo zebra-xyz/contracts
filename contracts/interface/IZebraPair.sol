@@ -68,7 +68,7 @@ interface IZebraPair {
 
     function sync() external;
 
-    function price(address token, uint256 baseDecimal) external view returns (uint256);
+    function price(address token, uint256 baseUnit) external view returns (uint256);
 
     function initialize(address, address) external;
 }

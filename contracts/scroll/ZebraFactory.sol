@@ -32,8 +32,7 @@ contract ZebraFactory is IZebraFactory {
         require(tokenA != tokenB, 'ZebraFactory: IDENTICAL_ADDRESSES');
         (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
         require(token0 != address(0), 'ZebraFactory: ZERO_ADDRESS');
-        require(getPair[token0][token1] == address(0), 'ZebraFactory: PAIR_EXISTS');
-        // single check is sufficient
+        require(getPair[token0][token1] == address(0), 'ZebraFactory: PAIR_EXISTS'); // single check is sufficient
         bytes memory bytecode = type(ZebraPair).creationCode;
         bytes32 salt = keccak256(abi.encodePacked(token0, token1));
         assembly {
@@ -41,8 +40,7 @@ contract ZebraFactory is IZebraFactory {
         }
         IZebraPair(pair).initialize(token0, token1);
         getPair[token0][token1] = pair;
-        getPair[token1][token0] = pair;
-        // populate mapping in the reverse direction
+        getPair[token1][token0] = pair; // populate mapping in the reverse direction
         allPairs.push(pair);
         emit PairCreated(token0, token1, pair, allPairs.length);
     }
@@ -60,7 +58,7 @@ contract ZebraFactory is IZebraFactory {
 
     function setFeeToRate(uint256 _rate) external {
         require(msg.sender == feeToSetter, 'ZebraFactory: FORBIDDEN');
-        require(_rate > 0, "ZebraFactory: FEE_TO_RATE_OVERFLOW");
+        require(_rate > 0 && _rate < 1000, "ZebraFactory: FEE_TO_RATE_OVERFLOW");
         feeToRate = _rate.sub(1);
     }
 
